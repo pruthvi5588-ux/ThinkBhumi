@@ -14,6 +14,7 @@ import {
 import { siteConfig } from "@/data/site";
 import Button from "@/components/ui/Button";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
+import { trackEvent } from "@/lib/pixel";
 
 const serviceOptions = [
   "Starter Package",
@@ -65,6 +66,7 @@ export default function Contact() {
       }
 
       setSubmitted(true);
+      trackEvent("Lead");
     } catch (error) {
       setErrorMessage(
         error instanceof Error
@@ -192,6 +194,7 @@ export default function Contact() {
               <a
                 href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
                 className="text-gray-700 hover:text-forest transition-colors"
+                onClick={() => trackEvent("Contact")}
               >
                 {siteConfig.phone}
               </a>
@@ -201,6 +204,7 @@ export default function Contact() {
               <a
                 href={`mailto:${siteConfig.email}`}
                 className="text-gray-700 hover:text-forest transition-colors"
+                onClick={() => trackEvent("Contact")}
               >
                 {siteConfig.email}
               </a>
@@ -222,6 +226,7 @@ export default function Contact() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-lg bg-[#25D366] text-white font-semibold hover:bg-[#20bd5a] transition-all hover:scale-[1.02]"
+              onClick={() => trackEvent("Contact")}
             >
               <MessageCircle className="w-5 h-5" />
               WhatsApp: +91 8917394210

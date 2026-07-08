@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 import { siteConfig } from "@/data/site";
 import Logo from "@/components/ui/Logo";
+import { trackEvent } from "@/lib/pixel";
 
 const footerLinks = [
   { href: "#home", label: "Home" },
@@ -78,6 +81,7 @@ export default function Footer() {
                 <a
                   href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
                   className="hover:text-saffron transition-colors"
+                  onClick={() => trackEvent("Contact")}
                 >
                   {siteConfig.phone}
                 </a>
@@ -86,6 +90,7 @@ export default function Footer() {
                 <a
                   href={`mailto:${siteConfig.email}`}
                   className="hover:text-saffron transition-colors"
+                  onClick={() => trackEvent("Contact")}
                 >
                   {siteConfig.email}
                 </a>
