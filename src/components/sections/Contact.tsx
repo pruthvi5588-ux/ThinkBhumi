@@ -26,12 +26,54 @@ const serviceOptions = [
   "Custom Package",
 ];
 
+const web3FormsAccessKey = "05c8edd1-2e72-4071-873b-d44e1abefe7b";
+
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      access_key: web3FormsAccessKey,
+      name: formData.get("name"),
+      business_name: formData.get("business"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      service: formData.get("service"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to send your message.");
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your message. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,6 +92,11 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {errorMessage ? (
+                <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                  {errorMessage}
+                </p>
+              ) : null}
               <div>
                 <label htmlFor="name" className="text-sm font-medium text-gray-700">
                   Name
@@ -122,8 +169,13 @@ export default function Contact() {
                   className="w-full border border-gray-300 rounded-lg px-4 py-2.5 mt-1 focus:outline-none focus:ring-2 focus:ring-forest/30 focus:border-forest transition resize-none"
                 />
               </div>
-              <Button type="submit" variant="primary" className="w-full">
-                Send Message
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>
           )}
