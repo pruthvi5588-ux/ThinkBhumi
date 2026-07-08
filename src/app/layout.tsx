@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Poppins } from "next/font/google";
 import "./globals.css";
 import BrandStyles from "@/components/layout/BrandStyles";
+import MetaPixel from "@/components/MetaPixel";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
       <body className="w-full font-sans antialiased bg-white text-gray-800">
         <BrandStyles />
+        <MetaPixel />
         {children}
       </body>
     </html>
